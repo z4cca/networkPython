@@ -18,7 +18,7 @@ sender_address = 'sender@gmail.com'
 receiver_address = 'receiver@mail.com'
 
 # Read encrypted file with mail password (located inside scripts directory)
-with open('password.txt', 'r') as p:
+with open('./mail_client_files/password.txt', 'r') as p:
     password = p.read()
 # Login
 server.login(sender_address, password)
@@ -32,7 +32,7 @@ msg['To'] = receiver_address
 msg['Subject'] = 'Subject'
 
 # Read text file with message (located inside scripts directory)
-with open('message.txt', 'r') as m:
+with open('./mail_client_files/message.txt', 'r') as m:
     message = m.read()
 # Attach plain text message into mails body 
 msg.attach(MIMEText(message, 'plain'))
@@ -40,7 +40,7 @@ msg.attach(MIMEText(message, 'plain'))
 
 ## Attachments
 # Creates attachment object and read image file in 'Read Bytes' mode (located inside scripts directory)
-imgfile = 'image.jpg'
+imgfile = './mail_client_files/image.jpg'
 attachment = open(imgfile, 'rb') 
 # Creates attachment payload object
 p = MIMEBase('application', 'octet-stream')
