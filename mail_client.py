@@ -7,27 +7,29 @@ from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
 
-# Configure smtp server (I'm using outlook mailing server, it uses port 587)
-server = smtplib.SMTP('smtp-mail.outlook.com', 587)
+# Configure smtp server (I'm using gmail mailing server, it uses port 587 by default)
+server = smtplib.SMTP('smtp.gmail.com', 587)
 
-# Start service
-server.ehlo()
-
-## Note to future: implement input variables to automate Server, Sender and Receiver
+# Start service with security
+server.starttls() 
 
 # Account login
+
+sender_address = 'sender@gmail.com'
+receiver_address = 'receiver@mail.com'
+
 # Read encrypted file with mail password (located inside scripts directory)
 with open('password.txt', 'r') as p:
     password = p.read()
 # Login
-server.login('mail@outlook.com', password)
+server.login(sender_address, password)
 
 
 ## Create mail message
 # Set mail Sender and Receiver config
 msg = MIMEMultipart()
-msg['From'] = 'Name <mail@outlook.com>'
-msg['To'] = 'Name <mail@mail.com>'
+msg['From'] = sender_address
+msg['To'] = receiver_address
 msg['Subject'] = 'Subject'
 
 # Read text file with message (located inside scripts directory)
@@ -51,4 +53,6 @@ msg.attach(p)
 
 # Set sendmail configurations
 body = msg.as_string()
-server.sendmail('mail@outlook.com', 'mail@mail.com', body)
+server.sendmail(sender_address, receiver_address, body)
+# Quit session
+server.quit()
