@@ -13,8 +13,7 @@ server = smtplib.SMTP('smtp.gmail.com', 587)
 # Start service with security
 server.starttls() 
 
-# Account login
-
+# Set sender and receiver mail
 sender_address = 'sender@gmail.com'
 receiver_address = 'receiver@mail.com'
 
@@ -25,8 +24,8 @@ with open('password.txt', 'r') as p:
 server.login(sender_address, password)
 
 
-## Create mail message
-# Set mail Sender and Receiver config
+## Create mail message body
+
 msg = MIMEMultipart()
 msg['From'] = sender_address
 msg['To'] = receiver_address
