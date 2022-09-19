@@ -1,12 +1,10 @@
-# FCC.networkPython
+# networkPython
 
-"Network Programming with Python" class ministered by FreeCodeCamp.org
 
-In this study case I'll develop 4 network Python scripts:
+	-Collection of network Python scripts (study cases)
 
-	- Mailing Client
-	- DDoS Script
-	- Port Scanner
-	- TCP Chat Room
+
+In this repository you'll find some transcriptions of codes commented by me for educational purpouse.
+
 
 (z4cca)
