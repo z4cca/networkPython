@@ -16,6 +16,22 @@ def execute(cmd):
     output = subprocess.check_output(shlex.split(cmd), stderr=subprocess.STDOUT)
     return output.decode()
 
+# Defines NetCat connection function
+def __init__(self, args, buffer=None):
+    # Start function with args from cmd line and creates ipv4, TCP connection socket
+    self.args = args
+    self.buffer = buffer
+    self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    # Manipulate socket option to permit bind to reuse ports for this socket.
+    self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+# If --listen, execute listen(), else execute send() to option
+def run(self):
+    if self.args.listen:
+        self.listen()
+    else:
+        self.send()
+
+
 # Defines main function with parser that holds the command line interface
 if __name__ == '__main__':
     # --help shows the user a list of options and description of commands
@@ -37,7 +53,7 @@ if __name__ == '__main__':
     parser.add_argument('-t', '--target', default='192.168.0.1', help='specified IP')
     parser.add_argument('-u', '--upload', help='upload file')
     args = parser.parse_args()
-    # If --listen is inserted as argument, starts NetCat object with an empty buffer otherwise send stdin buffer content
+    # If --listen is inserted as argument, starts NetCat object with an empty buffer string otherwise send stdin buffer content
     if  args.listen:
         buffer = ''
     else:
