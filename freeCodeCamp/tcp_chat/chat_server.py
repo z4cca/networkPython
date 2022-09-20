@@ -1,6 +1,6 @@
 # Import required libraries
-import threading
 import socket
+import threading
 
 # Set server configuration
 host = '127.0.0.1' # Localhost

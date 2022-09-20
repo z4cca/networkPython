@@ -1,7 +1,6 @@
 ## Import required libraries
-
-import threading
 import socket
+import threading
 
 ## Set target
 target = 'Insert target IP'

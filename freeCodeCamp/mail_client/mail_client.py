@@ -1,11 +1,10 @@
 ## Import necessary libraries
-
-import smtplib
-
 from email import encoders
 from email.mime.text import MIMEText
 from email.mime.base import MIMEBase
 from email.mime.multipart import MIMEMultipart
+
+import smtplib
 
 # Configure smtp server (I'm using gmail mailing server, it uses port 587 by default)
 server = smtplib.SMTP('smtp.gmail.com', 587)

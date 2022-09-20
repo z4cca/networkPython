@@ -1,7 +1,8 @@
 # Import required libraries
+from queue import Queue
+
 import socket
 import threading
-from queue import Queue
 
 # Define target and port
 target = "192.168.0.1"
