@@ -17,95 +17,96 @@ def execute(cmd):
     return output.decode()
 
 # Defines NetCat connection function
-def __init__(self, args, buffer=None):
-    # Start function with args from cmd line and creates ipv4, TCP connection socket
-    self.args = args
-    self.buffer = buffer
-    self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    # Manipulate socket option to permit bind to reuse ports for this socket.
-    self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-# If --listen, execute listen(), else execute send() to option
-def run(self):
-    if self.args.listen:
-        self.listen()
-    else:
-        self.send()
+class NetCat:
+    def __init__(self, args, buffer=None):
+        # Start function with args from cmd line and creates ipv4, TCP connection socket
+        self.args = args
+        self.buffer = buffer
+        self.socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        # Manipulate socket option to permit bind to reuse ports for this socket.
+        self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    # If --listen, execute listen(), else execute send() to option
+    def run(self):
+        if self.args.listen:
+            self.listen()
+        else:
+            self.send()
 
-# Define send function connecting to target:port and if avaible send buffer to target
-def send(self):
-    self.socket.connect((self.args.target, self.args.port))
-    if self.buffer:
-        self.socket.send(self.buffer)
+    # Define send function connecting to target:port and if avaible send buffer to target
+    def send(self):
+        self.socket.connect((self.args.target, self.args.port))
+        if self.buffer:
+            self.socket.send(self.buffer)
 
-    # Start loop to receive data from target, breaks when all data tranfer has ended
-    try:
-        while True:
-            recv_len = 1
-            response = ''
-            while recv_len:
-                data = self.socket.recv(4096)
-                recv_len = len(data)
-                response += data.decode()
-                if recv_len < 4096:
-                    break
-            # If not ended, print response data and waits for user input
-            if response:
-                print(response)
-                buffer = input('> ')
-                buffer += '\n'
-                self.socket.send(buffer.encode())
-    # Accepts Ctrl+C to exit script
-    except KeyboardInterrupt:
-        print('User terminated.')
-        self.socket.close()
-        sys.exit()
-
-# Defines listen function
-def listen(self):
-    # Binds to the target:port and starts listening in loop
-    self.socket.bind((self.args.target, self.args.port))
-    self.socket.listen(5)
-    # Pass connected socket to handle function
-    while True:
-        client_socket, _ = self.socket.accept()
-        client_thread = threading.Thread(target=self.handle, args=(client_socket,))
-        client_thread.start()
-
-# Defines handle function that passes the users argument entry to execute function and return output to socket
-def handle(self, client_socket):
-    if self.args.execute:
-        output = execute(self.args.execute)
-        client_socket.send(output.encode())
-    # Enters a listening loop for data coming and write accumulated content to file
-    elif self.args.upload:
-        file_buffer = b''
-        while True:
-            data = client_socket.recv(4096)
-            if data:
-                file_buffer += data
-            else:
-                break
-        
-        with open(self.args.upload, 'wb') as f:
-            f.write(file_buffer)
-        message = f'Saved file {self.args.upload}'
-        client_socket.send(message.encode())
-    # Send a prompt to user and waits for command string, then passes command using execute function
-    elif self.args.command:
-        cmd_buffer = b''
-        while True:
-            try:
-                client_socket.send(b'::>')
-                while '\n' not in cmd_buffer.decode():
-                    cmd_buffer += client_socket.recv(64)
-                response = execute(cmd_buffer.decode())
+        # Start loop to receive data from target, breaks when all data tranfer has ended
+        try:
+            while True:
+                recv_len = 1
+                response = ''
+                while recv_len:
+                    data = self.socket.recv(4096)
+                    recv_len = len(data)
+                    response += data.decode()
+                    if recv_len < 4096:
+                        break
+                # If not ended, print response data and waits for user input
                 if response:
-                    client_socket.send(response.encode())
-                cmd_buffer = b''
-            except Exception as e:
-                print(f'server killed {e}')
-                self.socket.close()
-                sys.exit()
+                    print(response)
+                    buffer = input('> ')
+                    buffer += '\n'
+                    self.socket.send(buffer.encode())
+        # Accepts Ctrl+C to exit script
+        except KeyboardInterrupt:
+            print('User terminated.')
+            self.socket.close()
+            sys.exit()
+
+    # Defines listen function
+    def listen(self):
+        # Binds to the target:port and starts listening in loop
+        self.socket.bind((self.args.target, self.args.port))
+        self.socket.listen(5)
+        # Pass connected socket to handle function
+        while True:
+            client_socket, _ = self.socket.accept()
+            client_thread = threading.Thread(target=self.handle, args=(client_socket,))
+            client_thread.start()
+
+    # Defines handle function that passes the users argument entry to execute function and return output to socket
+    def handle(self, client_socket):
+        if self.args.execute:
+            output = execute(self.args.execute)
+            client_socket.send(output.encode())
+        # Enters a listening loop for data coming and write accumulated content to file
+        elif self.args.upload:
+            file_buffer = b''
+            while True:
+                data = client_socket.recv(4096)
+                if data:
+                    file_buffer += data
+                else:
+                    break
+            
+            with open(self.args.upload, 'wb') as f:
+                f.write(file_buffer)
+            message = f'Saved file {self.args.upload}'
+            client_socket.send(message.encode())
+        # Send a prompt to user and waits for command string, then passes command using execute function
+        elif self.args.command:
+            cmd_buffer = b''
+            while True:
+                try:
+                    client_socket.send(b'::>')
+                    while '\n' not in cmd_buffer.decode():
+                        cmd_buffer += client_socket.recv(64)
+                    response = execute(cmd_buffer.decode())
+                    if response:
+                        client_socket.send(response.encode())
+                    cmd_buffer = b''
+                except Exception as e:
+                    print(f'server killed {e}')
+                    self.socket.close()
+                    sys.exit()
 
 # Defines main function with parser that holds the command line interface
 if __name__ == '__main__':
