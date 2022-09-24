@@ -29,7 +29,7 @@ def hexdump(src, length=16, show=True):
 # Defines function that will work as a gate for the two ends of proxy to receive data
 def receive_from(connection):
     buffer = b""
-    connection;settimeout(5)
+    connection.settimeout(5)
     try:
         # While there's data to receive, keep connection open..
         while True:
@@ -53,7 +53,7 @@ def response_handler(buffer):
 # Set connection to remote host
 def proxy_handler(client_socket, remote_host, remote_port, receive_first):
     remote_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    remote_socket.connecct((remote_host, remote_port))
+    remote_socket.connect((remote_host, remote_port))
     
     # Check if it's necessary to initiate connection and request data before the main loop 
     if receive_first:

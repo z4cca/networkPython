@@ -7,7 +7,7 @@ IP = '127.0.0.1'
 PORT = 'Insert port here'
 
 # Define connection socket and starts listening for income connections
-def main()
+def main():
     server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     server.bind((IP, PORT))
     server.listen(5) # Store a maximum backlog of 5 connections
