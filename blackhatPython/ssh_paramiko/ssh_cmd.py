@@ -14,6 +14,7 @@ def ssh_command(ip, port, user, passwd, cmd):
         print('---Output---')
         for line in output:
             print(line.strip())
+            
 # Getpass explicitly asks user for username and password(not displayed)
 if __name__ == '__main__':
     # user = getpass.getuser()
